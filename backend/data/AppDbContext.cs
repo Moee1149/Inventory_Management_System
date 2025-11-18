@@ -11,7 +11,6 @@ public class AppDbContext : DbContext
     {
     }
 
-    // Add DbSets for your models
     public DbSet<User> Users { get; set; }
     public DbSet<Product> Products { get; set; }
     public DbSet<ProductToImage> ProductToImage { get; set; }
