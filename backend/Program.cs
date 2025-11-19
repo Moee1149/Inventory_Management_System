@@ -1,7 +1,11 @@
 using System.Text;
 using Backend.Data;
 using Backend.IService;
+using Backend.IService.IFileService;
+using Backend.IService.IProductService;
 using Backend.Service;
+using Backend.Service.FileService;
+using Backend.Service.ProductService;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -32,6 +36,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     };
 });
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IFileService, FileService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 var app = builder.Build();
 
