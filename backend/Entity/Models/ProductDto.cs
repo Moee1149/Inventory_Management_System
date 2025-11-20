@@ -1,7 +1,6 @@
-
 using System.ComponentModel.DataAnnotations;
 
-namespace Backend.Entity.Models.ProductDto;
+namespace Backend.Entity.Models;
 
 public class ProductDto
 {
