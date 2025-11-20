@@ -40,6 +40,6 @@ public class FileService : IFileService
         {
             await file.CopyToAsync(stream);
         }
-        return filePath;
+        return $"UploadedFiles/{file.FileName}";
     }
 }
