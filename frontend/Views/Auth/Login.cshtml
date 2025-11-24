@@ -1,0 +1,23 @@
+@model Frontend.ViewModels.UserViewModel;
+
+<div class="min-h-screen flex items-center justify-center">
+    <div class="relative top-[-50px] w-md shadow-lg p-4 rounded-sm">
+        <h3 class="mb-4 text-center font-extrabold text-md" style="font-weight: 700">Login</h3>
+        <form asp-action="LoginUser" method="post" class="w-[400px] mx-auto flex flex-col gap-2">
+
+            <div class="mb-3 flex gap-3 items-center">
+                <label>Email:</label>
+                <input asp-for="Email" class="border w-full p-1 rounded-sm" /><br />
+            </div>
+
+            <div class="mb-3 flex gap-3 items-center">
+                <label>Password:</label>
+                <input asp-for="Password" type="password" class="border w-full p-1 rounded-sm" /><br />
+            </div>
+
+            <button type="submit"
+                class="font-semibold p-2 w-full bg-blue-500 text-white hover:bg-blue-600 border-0 rounded-lg"
+                style="border-radius: 10px">Login User</button>
+        </form>
+    </div>
+</div>
