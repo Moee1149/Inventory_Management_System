@@ -1,0 +1,123 @@
+@model IEnumerable<Frontend.ViewModels.ProductViewModel>
+
+<div class="max-w-[1250px] mx-auto px-4 py-8">
+    <!-- Header with Search -->
+    <div class="mb-15">
+        <div class="relative max-w-lg mx-auto">
+            <input type="text" placeholder="Search products..."
+                class="w-full py-[0.7rem] pl-[3rem] pr-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent shadow-sm transition">
+            <svg class="absolute left-3 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
+                viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+        </div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+        <!-- Product Card -->
+        @foreach (var product in @Model)
+        {
+            <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
+                <!-- Image Container -->
+                <div class="relative overflow-hidden bg-gray-100 h-64">
+                    <img src="http://localhost:5271/@product.ProductImages.FirstOrDefault().FilePath"
+                        alt="@product.Description"
+                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    <div class="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                        New
+                    </div>
+                </div>
+
+                <!-- Product Info -->
+                <div class="p-6">
+                    <div class="flex items-start justify-between mb-2">
+                        <h3 class="text-lg font-bold text-gray-800 line-clamp-1">@product.Name</h3>
+                        <button class="text-gray-400 hover:text-red-500 transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z">
+                                </path>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <p class="text-gray-600 text-sm mb-2 line-clamp-2">
+                        @product.Description
+                    </p>
+
+                    <!-- Rating -->
+                    <div class="flex items-center mb-2">
+                        <div class="flex text-yellow-400">
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                            <svg class="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                            <svg class="w-4 h-4 fill-current text-gray-300" viewBox="0 0 20 20">
+                                <path
+                                    d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                        </div>
+                        <span class="text-gray-600 text-sm ml-2">(128 reviews)</span>
+                    </div>
+
+                    <!-- Price and Button -->
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <span class="text-2xl font-bold text-gray-800">Rs. @product.Price</span>
+                            <span class="text-sm text-gray-400 line-through ml-2">$399</span>
+                        </div>
+                        <button
+                            class="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2.5 font-semibold transition-colors duration-200 flex items-center space-x-2"
+                            style="border-radius: 5px">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z">
+                                </path>
+                            </svg>
+                            <span>Add To Cart</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    <div class="flex items-center justify-center space-x-2">
+        <button
+            class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled>
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+        </button>
+
+        <button class="px-4 py-2 rounded-lg bg-blue-500 text-white font-semibold shadow-sm">1</button>
+        <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">2</button>
+        <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">3</button>
+        <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">4</button>
+        <span class="px-2 text-gray-500">...</span>
+        <button
+            class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">12</button>
+
+        <button class="px-4 py-2 rounded-lg border border-gray-300 text-gray-600 hover:bg-gray-50 transition">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+        </button>
+    </div>
+</div>

@@ -12,6 +12,14 @@ public class ApiClient : IApiClient
         _httpClient = http;
     }
 
+    public async Task<ApiResponseViewModel<List<ProductViewModel>>> GetAllProduct(string search = "", int pageNumber = 1)
+    {
+        var response = await _httpClient.GetAsync($"api/product?search={search}&page={pageNumber}");
+        response.EnsureSuccessStatusCode();
+        var result = await response.Content.ReadFromJsonAsync<ApiResponseViewModel<List<ProductViewModel>>>();
+        return result!;
+    }
+
     public async Task<HttpResponseMessage> HandleUserLogin(UserViewModel user)
     {
         return await _httpClient.PostAsJsonAsync($"api/auth/login", user);
@@ -21,4 +29,5 @@ public class ApiClient : IApiClient
     {
         return await _httpClient.PostAsJsonAsync($"api/auth/register", newUser);
     }
+
 }
