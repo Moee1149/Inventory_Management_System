@@ -1,4 +1,4 @@
-@model IEnumerable<Frontend.ViewModels.ProductViewModel>
+@model IEnumerable<Frontend.ViewModels.ProductDisplayViewModel>
 
 <div class="max-w-[1250px] mx-auto px-4 py-8">
     <!-- Header with Search -->
@@ -21,15 +21,17 @@
         {
             <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden group">
                 <!-- Image Container -->
-                <div class="relative overflow-hidden bg-gray-100 h-64">
-                    <img src="http://localhost:5271/@product.ProductImages.FirstOrDefault().FilePath"
-                        alt="@product.Description"
-                        class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
-                    <div class="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                        New
+                <a asp-controller="Product" asp-action="GetProductBYId" asp-route-id="@product.Id">
+                    <div class="relative overflow-hidden bg-gray-100 h-64">
+                        <img src="http://localhost:5271/@product.ProductImages.FirstOrDefault()?.FilePath"
+                            alt="@product.Description"
+                            class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                        <div
+                            class="absolute top-4 right-4 bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                            New
+                        </div>
                     </div>
-                </div>
-
+                </a>
                 <!-- Product Info -->
                 <div class="p-6">
                     <div class="flex items-start justify-between mb-2">

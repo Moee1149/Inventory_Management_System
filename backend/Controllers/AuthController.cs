@@ -23,7 +23,7 @@ public class AuthController(IAuthService _authService) : ControllerBase
             {
                 return Conflict(result.Message);
             }
-            return Ok(new { message = result.Message, data = result.Data });
+            return Ok(new { message = result.Message, data = ""});
         }
         catch (Exception e)
         {

@@ -9,17 +9,19 @@ namespace MyApp.Namespace
     [ApiController]
     public class ProductController(IProductService _productService) : ControllerBase
     {
-        [Authorize]
         [HttpPost("register")]
         public async Task<IActionResult> CreateNewProduct([FromForm] ProductDto request)
         {
+            Console.WriteLine("We are in controller");
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             try
             {
+                Console.WriteLine("ok adding product here before");
                 var result = await _productService.CreateNewProduct(request);
+                Console.WriteLine("ok adding product here");
                 return Ok(new { message = result.Message, data = result.Data });
             }
             catch (Exception e)

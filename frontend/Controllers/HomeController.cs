@@ -1,16 +1,17 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using frontend.Models;
+using Frontend.IService;
 
 namespace frontend.Controllers;
 
 public class HomeController : Controller
 {
-    private readonly ILogger<HomeController> _logger;
+    private readonly IAuthService _authService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(IAuthService authService)
     {
-        _logger = logger;
+        _authService = authService;
     }
 
     public IActionResult Index()
@@ -18,6 +19,11 @@ public class HomeController : Controller
         return View();
     }
 
+    public IActionResult LogoutUser()
+    {
+        _authService.Logout();
+        return RedirectToAction("Index", "Home");
+    }
     public IActionResult Privacy()
     {
         return View();
@@ -28,4 +34,5 @@ public class HomeController : Controller
     {
         return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
     }
+
 }

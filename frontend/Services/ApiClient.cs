@@ -12,22 +12,43 @@ public class ApiClient : IApiClient
         _httpClient = http;
     }
 
-    public async Task<ApiResponseViewModel<List<ProductViewModel>>> GetAllProduct(string search = "", int pageNumber = 1)
+    public async Task<ApiResponseViewModel<T>> GetJsonAsync<T>(string endpoint)
     {
-        var response = await _httpClient.GetAsync($"api/product?search={search}&page={pageNumber}");
-        response.EnsureSuccessStatusCode();
-        var result = await response.Content.ReadFromJsonAsync<ApiResponseViewModel<List<ProductViewModel>>>();
-        return result!;
+        var response = await _httpClient.GetFromJsonAsync<ApiResponseViewModel<T>>(endpoint);
+        return new ApiResponseViewModel<T>
+        {
+            Data = response!.Data,
+            Message = response.Message,
+            StatusCode = response.StatusCode
+        };
     }
 
-    public async Task<HttpResponseMessage> HandleUserLogin(UserViewModel user)
+    public async Task<ApiResponseViewModel<T>> PostAsync<T>(string endpoint, MultipartFormDataContent data)
     {
-        return await _httpClient.PostAsJsonAsync($"api/auth/login", user);
+        var response = await _httpClient.PostAsync(endpoint, data);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponseViewModel<T>>();
+        return new ApiResponseViewModel<T>
+        {
+            Data = result!.Data,
+            Message = result.Message,
+            StatusCode = (int)response.StatusCode
+        };
     }
 
-    public async Task<HttpResponseMessage> HandleUserRegister(UserCreateViewModel newUser)
+    public async Task<ApiResponseViewModel<T>> PutJsonAsync<T>(string endpoint, T data)
     {
-        return await _httpClient.PostAsJsonAsync($"api/auth/register", newUser);
+        throw new NotImplementedException();
     }
 
+    public async Task<ApiResponseViewModel<R>> PostJsonAsync<T, R>(string endpoint, T data)
+    {
+        var response = await _httpClient.PostAsJsonAsync(endpoint, data);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponseViewModel<R>>();
+        return new ApiResponseViewModel<R>
+        {
+            Data = result!.Data,
+            Message = result.Message,
+            StatusCode = (int)response.StatusCode
+        };
+    }
 }

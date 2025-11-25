@@ -2,10 +2,11 @@ using Frontend.ViewModels;
 
 namespace Frontend.IService;
 
-
 public interface IApiClient
 {
-    public Task<HttpResponseMessage> HandleUserLogin(UserViewModel user);
-    public Task<HttpResponseMessage> HandleUserRegister(UserCreateViewModel newUser);
-    public Task<ApiResponseViewModel<List<ProductViewModel>>> GetAllProduct(string search = "", int pageNumber = 1);
+    public Task<ApiResponseViewModel<R>> PostJsonAsync<T, R>(string endpoint, T data);
+    public Task<ApiResponseViewModel<T>> PostAsync<T>(string endpoint, MultipartFormDataContent data);
+    public Task<ApiResponseViewModel<T>> GetJsonAsync<T>(string endpoint);
+    // public Task<HttpResponseMessage> GetByIdJsonAsync<T>(string endpoint, T id);
+    public Task<ApiResponseViewModel<T>> PutJsonAsync<T>(string endpoint, T data);
 }

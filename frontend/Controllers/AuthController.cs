@@ -5,12 +5,16 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Frontend.Controllers;
 
-public class AuthController(IApiClient _apiClient) : Controller
+public class AuthController(IAuthService _authService) : Controller
 {
     // GET: AuthController
     [HttpGet("auth/login")]
     public ActionResult ViewLoginUser()
     {
+        if (_authService.IsLoggenIn())
+        {
+            return RedirectToAction("Index", "Home");
+        }
         return View("Login");
     }
 
@@ -21,14 +25,15 @@ public class AuthController(IApiClient _apiClient) : Controller
         {
             return View("Login", user);
         }
-        var response = await _apiClient.HandleUserLogin(user);
-        var content = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(content);
-        if (!response.IsSuccessStatusCode)
+        var response = await _authService.HandleUserLogin(user);
+        if (response.StatusCode < 200 || response.StatusCode > 299)
         {
-            var errorResponse = JsonSerializer.Deserialize<ApiResponseViewModel<object>>(content);
-            ViewBag.ErrorMessage = errorResponse?.Message;
-            return View();
+            ViewBag.ErrorMessgae = response.Message;
+            return View("Register", user);
+        }
+        if (!string.IsNullOrEmpty(response?.Data))
+        {
+            _authService.SetTokenCookie(response.Data);
         }
         return RedirectToAction("Index", "Home");
     }
@@ -43,19 +48,25 @@ public class AuthController(IApiClient _apiClient) : Controller
     [HttpPost("auth/register")]
     public async Task<ActionResult> RegisterUser(UserCreateViewModel newUser)
     {
-        if (!ModelState.IsValid)
+        try
         {
-            return View("Register", newUser);
+            if (!ModelState.IsValid)
+            {
+                return View("Register", newUser);
+            }
+            var response = await _authService.HandleUserRegister(newUser);
+            Console.WriteLine("Status code = " + response.StatusCode);
+            if (response.StatusCode < 200 || response.StatusCode > 299)
+            {
+                ViewBag.ErrorMessgae = response.Message;
+                return View("Register", newUser);
+            }
+            return RedirectToAction("ViewLoginUser", "Auth");
         }
-        var response = await _apiClient.HandleUserRegister(newUser);
-        var content = await response.Content.ReadAsStringAsync();
-        Console.WriteLine(content);
-        if (!response.IsSuccessStatusCode)
+        catch (Exception e)
         {
-            var errorResponse = JsonSerializer.Deserialize<ApiResponseViewModel<object>>(content);
-            ViewBag.ErrorMessage = errorResponse?.Message;
-            return View();
+            Console.WriteLine($"Error creating user : {e}");
+            return View("Register");
         }
-        return RedirectToAction("ViewLoginUser", "Home");
     }
 }

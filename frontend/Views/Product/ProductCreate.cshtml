@@ -1,0 +1,226 @@
+@model Frontend.ViewModels.ProductAddViewModel
+
+<div class="container mx-auto px-4 max-w-4xl">
+    <!-- Form Card -->
+    <div class="max-w-lg mx-auto py-8">
+        <form asp-controller="Product" asp-action="AddNewProduct" method="post" enctype="multipart/form-data">
+            <!-- Product Name -->
+            <div class="mb-6">
+                <label for="productname" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Product Name <span class="text-red-500">*</span>
+                </label>
+                <input asp-for="ProductName" placeholder="Enter product name"
+                    class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                    required>
+            </div>
+
+            <!-- Product Price -->
+            <div class="mb-6">
+                <label for="productprice" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Product Price <span class="text-red-500">*</span>
+                </label>
+                <div class="relative">
+                    <input asp-for="ProductPrice" type="number" placeholder="0.00" step="0.01" min="0"
+                        class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                        required>
+                </div>
+            </div>
+
+            <!-- Category -->
+            <div class="mb-6">
+                <label for="category" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Category <span class="text-red-500">*</span>
+                </label>
+                <div class="mb-3 flex gap-3 items-center">
+                    <select asp-for="Category"
+                        class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition appearance-none bg-white"
+                        required>
+                        <option value="" class="text-gray-700">Select a category</option>
+                        <option value="shoe">Shoe</option>
+                        <option value="clothing">Clothing</option>
+                        <option value="accessories">Accessories</option>
+                        <option value="electronics">Electronics</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <!-- Stock -->
+            <div class="mb-6">
+                <label for="stock" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Stock Quantity <span class="text-red-500">*</span>
+                </label>
+                <input type="number" asp-for="Stock" placeholder="Enter stock quantity" min="0"
+                    class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition"
+                    required>
+            </div>
+
+            <!-- Description -->
+            <div class="mb-6">
+                <label for="description" class="block text-sm font-semibold text-gray-700 mb-2">
+                    Description <span class="text-red-500">*</span>
+                </label>
+                <textarea asp-for="Description" id="description" rows="5" placeholder="Enter product description..."
+                    class="w-full px-4 py-2 rounded-xl border-2 border-gray-200 focus:border-blue-500 focus:outline-none transition resize-none"
+                    required></textarea>
+                <p class="text-sm text-gray-500 mt-2">
+                    <span id="charCount">0</span> / 500 characters
+                </p>
+            </div>
+
+            <!-- Product Images -->
+            <div class="mb-8">
+                <label class="block text-sm font-semibold text-gray-700 mb-2">
+                    Product Images <span class="text-red-500">*</span>
+                </label>
+                <p class="text-sm text-gray-600 mb-4">Upload up to 5 images (Max 5MB each)</p>
+
+                <!-- Upload Area -->
+                <div id="dropZone"
+                    class="border-2 border-dashed border-gray-300 rounded-xl p-8 text-center hover:border-blue-500 transition cursor-pointer bg-gray-50">
+                    <svg class="w-12 h-12 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12">
+                        </path>
+                    </svg>
+                    <p class="text-gray-600 mb-2">
+                        <span class="font-semibold text-blue-500">Click to upload</span> or drag and drop
+                    </p>
+                    <p class="text-sm text-gray-500">PNG, JPG, WEBP up to 5MB</p>
+                    <input type="file" id="productimages" name="productimages" multiple accept="image/*" class="hidden">
+                </div>
+
+                <!-- Image Preview Grid -->
+                <div id="imagePreview" class="grid grid-cols-2 md:grid-cols-5 gap-4 mt-4"></div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex gap-4">
+                <button type="submit"
+                    class="flex-1 bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white py-3 font-extrabold text-lg transition shadow-lg flex items-center justify-center space-x-2"
+                    style="border-radius: 10px">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7">
+                        </path>
+                    </svg>
+                    <span>Add Product</span>
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Success Message (Hidden by default) -->
+    <div id="successMessage" class="hidden mt-6 bg-green-50 border-2 border-green-200 rounded-xl p-6">
+        <div class="flex items-center">
+            <div class="flex-shrink-0">
+                <svg class="w-8 h-8 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+            </div>
+            <div class="ml-4">
+                <h3 class="text-lg font-semibold text-green-800">Product Added Successfully!</h3>
+                <p class="text-green-700">Your product has been added to the inventory.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedFiles = [];
+    const maxFiles = 5;
+    const maxSize = 5 * 1024 * 1024; // 5MB
+
+    // Character counter for description
+    const descriptionInput = document.getElementById('description');
+    const charCount = document.getElementById('charCount');
+
+    descriptionInput.addEventListener('input', function () {
+        const count = this.value.length;
+        charCount.textContent = count;
+        if (count > 500) {
+            charCount.classList.add('text-red-500');
+        } else {
+            charCount.classList.remove('text-red-500');
+        }
+    });
+
+    // File upload handling
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('productimages');
+    const imagePreview = document.getElementById('imagePreview');
+
+    dropZone.addEventListener('click', () => {
+        fileInput.click();
+        console.log("form clicked");
+    });
+    dropZone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-blue-500', 'bg-blue-50');
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-blue-500', 'bg-blue-50');
+        handleFiles(e.dataTransfer.files);
+    });
+
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        const fileArray = Array.from(files);
+
+        if (selectedFiles.length + fileArray.length > maxFiles) {
+            alert(`You can only upload up to ${maxFiles} images`);
+            return;
+        }
+
+        fileArray.forEach(file => {
+            if (!file.type.startsWith('image/')) {
+                alert(`${file.name} is not an image file`);
+                return;
+            }
+
+            if (file.size > maxSize) {
+                alert(`${file.name} is too large. Maximum size is 5MB`);
+                return;
+            }
+
+            selectedFiles.push(file);
+            displayImage(file);
+        });
+    }
+
+    function displayImage(file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const div = document.createElement('div');
+            div.className = 'relative group';
+            div.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview" class="w-full aspect-3/2 object-cover rounded-lg border-2 border-gray-200">
+                    <button 
+                        onclick="removeImage(${selectedFiles.length - 1})"
+                        class="absolute top-2 right-2 bg-red-500 text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition"
+                    >
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                `;
+            imagePreview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    function removeImage(index) {
+        selectedFiles.splice(index, 1);
+        imagePreview.children[index].remove();
+    }
+</script>

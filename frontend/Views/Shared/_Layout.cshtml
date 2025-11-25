@@ -29,10 +29,62 @@
                         </li>
                     </ul>
                     <div>
-                        <button>
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth"
-                                asp-action="ViewLoginUser">Login</a>
-                        </button>
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <div class="relative">
+                                <button id="profileButton" class="flex items-center space-x-2 focus:outline-none">
+                                    <!-- User Avatar Circle -->
+                                    <div
+                                        class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 font-medium hover:bg-gray-300 transition">
+                                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                            </path>
+                                        </svg>
+                                    </div>
+                                </button>
+
+                                <!-- Dropdown Menu -->
+                                <div id="profileDropdown"
+                                    class="hidden absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+                                    <!-- Profile Button -->
+                                    <a href="#" class="flex items-center px-4 py-3 hover:bg-gray-50 transition">
+                                        <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z">
+                                            </path>
+                                        </svg>
+                                        <span class="text-gray-700">Profile</span>
+                                    </a>
+
+                                    <!-- Divider -->
+                                    <div class="border-t border-gray-200"></div>
+
+                                    <!-- Logout Button -->
+                                    <form asp-controller="Home" asp-action="LogoutUser">
+                                        <button type="submit"
+                                            class="w-full flex items-center px-4 py-3 hover:bg-gray-50 transition text-left">
+                                            <svg class="w-5 h-5 text-gray-600 mr-3" fill="none" stroke="currentColor"
+                                                viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                                </path>
+                                            </svg>
+                                            <span class="text-gray-700">Logout</span>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Auth" asp-action="ViewLoginUser">
+                                <button class="bg-blue-500 text-white py-2 px-3 font-bold"
+                                    style="border-radius: 10px">Login</button>
+                            </a>
+                        }
+
                     </div>
                 </div>
             </div>
@@ -43,7 +95,46 @@
             @RenderBody()
         </main>
     </div>
+    <script>
+        const profileButton = document.getElementById('profileButton');
+        const profileDropdown = document.getElementById('profileDropdown');
 
+        profileButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            profileDropdown.classList.toggle('hidden');
+        });
+
+        profileButton.addEventListener('mouseenter', () => {
+            profileDropdown.classList.remove('hidden');
+        });
+
+        // Keep dropdown open when hovering over it
+        profileDropdown.addEventListener('mouseenter', () => {
+            profileDropdown.classList.remove('hidden');
+        });
+
+        // Hide dropdown when mouse leaves
+        let hideTimeout;
+        profileButton.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => {
+                if (!profileDropdown.matches(':hover')) {
+                    profileDropdown.classList.add('hidden');
+                }
+            }, 200);
+        });
+
+        profileDropdown.addEventListener('mouseleave', () => {
+            hideTimeout = setTimeout(() => {
+                profileDropdown.classList.add('hidden');
+            }, 200);
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!profileButton.contains(e.target) && !profileDropdown.contains(e.target)) {
+                profileDropdown.classList.add('hidden');
+            }
+        });
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

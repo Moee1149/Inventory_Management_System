@@ -1,10 +1,19 @@
 using Frontend.IService;
+using Frontend.Middleware;
 using Frontend.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddAuthentication("CustomJwtAuth")
+    .AddCookie("CustomJwtAuth", options =>
+    {
+        options.LoginPath = "/Auth/Login";
+    });
+builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 // Add services to the container.
 builder.Services.AddHttpClient<IApiClient, ApiClient>(client =>
 {
@@ -22,9 +31,11 @@ if (!app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseMiddleware<JwtCookieAuthMiddleware>();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthentication();
 
 app.MapStaticAssets();
 
