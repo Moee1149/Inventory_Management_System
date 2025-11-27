@@ -14,19 +14,10 @@ public class HomeController : Controller
         _authService = authService;
     }
 
-    public IActionResult Index()
-    {
-        return View();
-    }
-
     public IActionResult LogoutUser()
     {
         _authService.Logout();
-        return RedirectToAction("Index", "Home");
-    }
-    public IActionResult Privacy()
-    {
-        return View();
+        return RedirectToAction("Index", "Product");
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

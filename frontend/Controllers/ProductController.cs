@@ -10,9 +10,14 @@ namespace Frontend.Controllers;
 public class ProductController(IProductService productService, IConfiguration _config) : Controller
 {
     // GET: ProductController
-    [HttpGet("product")]
+    // [HttpGet("product")]
+    [Authorize]
     public async Task<ActionResult> Index()
     {
+        if (HttpContext.User.IsInRole("Admin"))
+        {
+            return RedirectToAction("Index", "Admin");
+        }
         try
         {
             var response = await productService.GetAllProduct();
@@ -39,7 +44,7 @@ public class ProductController(IProductService productService, IConfiguration _c
         return View("Product", result.Data);
     }
 
-    [Authorize]
+    [Authorize(Roles = "Admin")]
     [HttpGet("product/create")]
     public async Task<ActionResult> ViewAddNewProductForm([FromForm] ProductAddViewModel product)
     {

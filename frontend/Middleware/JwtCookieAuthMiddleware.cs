@@ -44,36 +44,4 @@ public class JwtCookieAuthMiddleware(RequestDelegate _next)
         }
         await _next(context);
     }
-    private Dictionary<string, object>? DecodeJwtPayload(string token)
-    {
-        try
-        {
-            var handler = new JwtSecurityTokenHandler();
-
-            var jwt = handler.ReadJwtToken(token);
-
-            var json = JsonSerializer.Serialize(jwt.Payload);
-            return JsonSerializer.Deserialize<Dictionary<string, object>>(json);
-        }
-        catch
-        {
-            return null;
-        }
-    }
-
-    private ClaimsPrincipal CreatePrincipalFromPayload(Dictionary<string, object> payload)
-    {
-        var claims = new List<Claim>();
-
-        foreach (var item in payload)
-        {
-            if (item.Value != null)
-            {
-                claims.Add(new Claim(item.Key, item.Value.ToString()!));
-            }
-        }
-
-        var identity = new ClaimsIdentity(claims, "CustomJwtAuth");
-        return new ClaimsPrincipal(identity);
-    }
 }

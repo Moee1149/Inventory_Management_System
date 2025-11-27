@@ -13,7 +13,7 @@ public class AuthController(IAuthService _authService) : Controller
     {
         if (_authService.IsLoggenIn())
         {
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("Index", "Product");
         }
         return View("Login");
     }
@@ -31,17 +31,25 @@ public class AuthController(IAuthService _authService) : Controller
             ViewBag.ErrorMessgae = response.Message;
             return View("Register", user);
         }
-        if (!string.IsNullOrEmpty(response?.Data))
+        if (!string.IsNullOrEmpty(response?.Data?.Token))
         {
-            _authService.SetTokenCookie(response.Data);
+            _authService.SetTokenCookie(response.Data.Token);
         }
-        return RedirectToAction("Index", "Home");
+        if (response?.Data?.User.Role == "Admin")
+        {
+            return RedirectToAction("Index", "Admin");
+        }
+        return RedirectToAction("Index", "Product");
     }
 
     [HttpGet]
     [Route("auth/register")]
     public ActionResult ViewRegisterUser()
     {
+        if (_authService.IsLoggenIn())
+        {
+            return RedirectToAction("Index", "Product");
+        }
         return View("Register");
     }
 

@@ -15,26 +15,26 @@ namespace Backend.Service;
 public class AuthService(AppDbContext _context, IConfiguration configuration) : IAuthService
 {
     private PasswordHasher<User> hasher = new PasswordHasher<User>();
-    public async Task<ServiceResult<string>> LoginUser(UserDto request)
+    public async Task<ServiceResult<LoginReturnType>> LoginUser(UserDto request)
     {
         if (string.IsNullOrWhiteSpace(request.Email) || string.IsNullOrWhiteSpace(request.Password))
         {
-            return ServiceResult<string>.Fail("Field is Required", 400);
+            return ServiceResult<LoginReturnType>.Fail("Field is Required", 400);
         }
 
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == request.Email);
         if (user is null)
         {
-            return ServiceResult<string>.Fail("User Not Found", 404);
+            return ServiceResult<LoginReturnType>.Fail("User Not Found", 404);
         }
         var result = hasher.VerifyHashedPassword(user, user.HashedPassword, request.Password);
 
         if (result == PasswordVerificationResult.Failed)
         {
-            return ServiceResult<string>.Fail("Email or Password incorrect", 401);
+            return ServiceResult<LoginReturnType>.Fail("Email or Password incorrect", 401);
         }
         string token = CreateToken(user);
-        return ServiceResult<string>.Ok(token, 200, "User Login Successfull");
+        return ServiceResult<LoginReturnType>.Ok(new LoginReturnType { Token = token, User = user }, 200, "User Login Successfull");
     }
 
     public async Task<ServiceResult<User>> RegisterNewUser(UserDto request)

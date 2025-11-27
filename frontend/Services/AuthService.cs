@@ -6,9 +6,9 @@ namespace Frontend.Services;
 
 public class AuthService(IHttpContextAccessor _http, IApiClient _apiClient) : IAuthService
 {
-    public async Task<ApiResponseViewModel<string>> HandleUserLogin(UserViewModel user)
+    public async Task<ApiResponseViewModel<LoginViewModel>> HandleUserLogin(UserViewModel user)
     {
-        var response = await _apiClient.PostJsonAsync<UserViewModel, string>("api/auth/login", user);
+        var response = await _apiClient.PostJsonAsync<UserViewModel, LoginViewModel>("api/auth/login", user);
         return response;
     }
 
