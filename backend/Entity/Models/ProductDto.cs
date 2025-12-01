@@ -13,5 +13,6 @@ public class ProductDto
     public string Category { get; set; } = "";
     [Range(0, int.MaxValue)]
     public int Stock { get; set; }
+    public List<int> DeletedIds { get; set; } = new();
     public List<IFormFile>? ProductImages { get; set; }
 }

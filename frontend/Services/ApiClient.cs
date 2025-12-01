@@ -35,9 +35,16 @@ public class ApiClient : IApiClient
         };
     }
 
-    public async Task<ApiResponseViewModel<T>> PutJsonAsync<T>(string endpoint, T data)
+    public async Task<ApiResponseViewModel<T>> PutAsync<T>(string endpoint, MultipartFormDataContent data)
     {
-        throw new NotImplementedException();
+        var response = await _httpClient.PutAsync(endpoint, data);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponseViewModel<T>>();
+        return new ApiResponseViewModel<T>
+        {
+            Data = result!.Data,
+            Message = result.Message,
+            StatusCode = (int)response.StatusCode
+        };
     }
 
     public async Task<ApiResponseViewModel<R>> PostJsonAsync<T, R>(string endpoint, T data)

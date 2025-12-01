@@ -46,7 +46,7 @@ public class ProductController(IProductService productService, IConfiguration _c
 
     [Authorize(Roles = "Admin")]
     [HttpGet("product/create")]
-    public async Task<ActionResult> ViewAddNewProductForm([FromForm] ProductAddViewModel product)
+    public async Task<ActionResult> ViewAddNewProductForm()
     {
         return View("ProductCreate");
     }
@@ -61,4 +61,42 @@ public class ProductController(IProductService productService, IConfiguration _c
         var result = await productService.AddNewProduct(newProduct);
         return RedirectToAction("Index", "Product");
     }
+
+    [HttpGet("product/edit/{id}")]
+    public async Task<IActionResult> GetUpdateProductView(int id)
+    {
+        var result = await productService.GetProductById(id);
+        var images = new List<object>();
+        string baseUrl = _config["AppSettings:BaseUrl"]!;
+        foreach (var image in result.Data!.ProductImages)
+        {
+            images.Add(new
+            {
+                imageUrl = $"{baseUrl}/{image.FilePath}",
+                id = image.Id
+            });
+        }
+        ViewBag.Images = images;
+        return View("ProductUpdate", result.Data);
+    }
+
+    [HttpPost("product/edit")]
+    public async Task<IActionResult> UpdateProduct([FromForm] ProductEditViewModel product)
+    {
+        try
+        {
+            var response = await productService.UpdateProduct(product);
+            if (response.StatusCode < 200 || response.StatusCode > 299)
+            {
+                return RedirectToAction("Error", "Home");
+            }
+            return RedirectToAction("Index", "Admin");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Error updating = {e.Message}");
+            return RedirectToAction("Error", "Home");
+        }
+    }
 }
+

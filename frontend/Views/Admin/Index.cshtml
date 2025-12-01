@@ -58,9 +58,9 @@
                     <td class="border border-gray-300 p-2 text-center">@product.Price</td>
                     <td class="border border-gray-300 p-2 text-center">@product.Stock</td>
                     <td class="space-x-3 border border-gray-300 p-2 text-center">
-                        <a asp-action="Edit" asp-route-id="Id"
+                        <a asp-action="GetUpdateProductView" asp-controller="Product" asp-route-id="@product.Id"
                             class="inline-block p-2 border border-gray-300 rounded-lg w-20 inline-block text-center">Edit</a>
-                        <a asp-action="Delete" asp-route-id="Id"
+                        <a asp-action="Delete" asp-route-id="@product.Id"
                             class="inline-block p-2 bg-red-400 text-white rounded-lg w-20 inline-block text-center">Delete</a>
                     </td>
                 </tr>
