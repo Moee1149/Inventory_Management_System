@@ -79,5 +79,24 @@ namespace MyApp.Namespace
                 return StatusCode(500, new { message = "Unknow error occured" });
             }
         }
+
+        [HttpDelete("delete/{id}")]
+        public async Task<IActionResult> DeleteProduct(int id)
+        {
+            try
+            {
+                var response = await _productService.DeleteProductById(id);
+                if (response.StatusCode == 400)
+                {
+                    return BadRequest(response.Message);
+                }
+                return Ok(new { data = response.Data, message = response.Message });
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine($"Error deleting product: {e}");
+                return StatusCode(500, new { message = "Unknow error occured" });
+            }
+        }
     }
 }

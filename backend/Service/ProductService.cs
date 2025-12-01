@@ -87,4 +87,16 @@ public class ProductService(AppDbContext _context, IFileService fileService) : I
         }
         await _context.SaveChangesAsync();
     }
+
+    public async Task<ServiceResult<string>> DeleteProductById(int id)
+    {
+        var employee = await _context.Products.FindAsync(id);
+        if (employee == null)
+        {
+            return ServiceResult<string>.Fail("Product Not Found", 400);
+        }
+        _context.Products.Remove(employee);
+        await _context.SaveChangesAsync();
+        return ServiceResult<string>.Ok("Product deleted successfully", 200);
+    }
 }
